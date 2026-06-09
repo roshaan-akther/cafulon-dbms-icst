@@ -32,6 +32,11 @@ Database management system for Cafulon Restaurant & Dining, Colombo.
 
 ## Team
 
-NM. Roshaan Akther, A. Washid, MAM. Masheef, MIF. Fahmidha, MNF. Nuha, WMCS. Weerakkodi
+- NM. Roshaan Akther
+- A. Washid
+- MAM. Masheef
+- MIF. Fahmidha
+- MNF. Nuha
+- WMCS. Weerakkodi
 
 HDIT 12093 — Batch 01 — ICST
