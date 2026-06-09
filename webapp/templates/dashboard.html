@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block topbar_extra %}
+<span class="stat-badge"><i class="bi bi-clock me-1"></i><strong id="orderCount">{{ stats.pending_orders }}</strong> pending</span>
+{% endblock %}
+{% block content %}
+<div class="row g-2 mb-3">
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#eef5ff;color:#4a7cf7;"><i class="bi bi-people"></i></div>
+                <div class="min-w-0">
+                    <div class="stat-num">{{ stats.customers }}</div>
+                    <p class="stat-label">Customers</p>
+                    <a href="/customers" class="stat-link">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#f0faf0;color:#2a9d5e;"><i class="bi bi-person-badge"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.employees }}</div>
+                    <p class="stat-label">Employees</p>
+                    <a href="/employees" class="stat-link">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#fef5e8;color:#d49440;"><i class="bi bi-menu-app"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.menu }}</div>
+                    <p class="stat-label">Menu Items</p>
+                    <a href="/menu" class="stat-link">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#f5f0ff;color:#7c4af7;"><i class="bi bi-receipt"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.orders }}</div>
+                    <p class="stat-label">Orders</p>
+                    <a href="/orders" class="stat-link">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#fff0f0;color:#e05050;"><i class="bi bi-calendar-check"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.reservations }}</div>
+                    <p class="stat-label">Reservations</p>
+                    <a href="/reservations" class="stat-link">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#f0f5ff;color:#3a7bd5;"><i class="bi bi-currency-exchange"></i></div>
+                <div>
+                    <div class="stat-num">LKR {{ "{:,.0f}".format(stats.revenue) }}</div>
+                    <p class="stat-label">Revenue</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#fef5e8;color:#e8a87c;"><i class="bi bi-clock-history"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.pending_orders }}</div>
+                    <p class="stat-label">Pending</p>
+                    <a href="/orders" class="stat-link">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-start gap-2">
+                <div class="stat-icon" style="background:#f0faf0;color:#2a9d5e;"><i class="bi bi-calendar-event"></i></div>
+                <div>
+                    <div class="stat-num">{{ stats.today_reservations }}</div>
+                    <p class="stat-label">Today</p>
+                    <a href="/reservations" class="stat-link">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header flex-between">
+        Recent Orders
+        <a href="/orders" class="btn btn-sm btn-soft">All Orders</a>
+    </div>
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>#</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            {% for o in recent_orders %}
+            <tr>
+                <td class="fw-medium">{{ o.OrderID }}</td>
+                <td>{{ o.Customer or 'Walk-in' }}</td>
+                <td class="fw-medium">LKR {{ o.TotalAmount }}</td>
+                <td>{% set s = o.Status %}
+                    <span class="badge-st bg-{% if s=='Completed' %}success-subtle text-success{% elif s=='Cancelled' %}danger-subtle text-danger{% elif s=='Preparing' %}warning-subtle text-warning{% elif s=='Served' %}info-subtle text-info{% else %}secondary-subtle text-secondary{% endif %}">
+                        <span class="icon-dot bg-{% if s=='Completed' %}success{% elif s=='Cancelled' %}danger{% elif s=='Preparing' %}warning{% elif s=='Served' %}info{% else %}secondary{% endif %}"></span>{{ s }}
+                    </span>
+                </td>
+                <td class="text-xs text-muted">{{ o.OrderDate.strftime('%Y-%m-%d %H:%M') if o.OrderDate else '' }}</td>
+                <td class="text-end"><a href="/orders/{{ o.OrderID }}" class="btn btn-sm btn-soft">View</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

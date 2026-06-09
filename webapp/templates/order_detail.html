@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.OrderID }}{% endblock %}
+{% block heading %}Order #{{ order.OrderID }}{% endblock %}
+{% block content %}
+
+<div class="row g-2 mb-2">
+    <div class="col-md-8">
+        <div class="card h-100">
+            <div class="card-body p-3">
+                <div class="row g-2 text-xs">
+                    <div class="col-sm-4"><span class="text-muted">Customer</span><br><span class="fw-medium">{{ order.CustomerName or 'Walk-in' }}</span></div>
+                    <div class="col-sm-4"><span class="text-muted">Employee</span><br><span class="fw-medium">{{ order.EmployeeName }}</span></div>
+                    <div class="col-sm-4"><span class="text-muted">Table</span><br><span class="fw-medium">{{ order.TableNumber or 'N/A' }}</span></div>
+                    <div class="col-sm-4"><span class="text-muted">Type</span><br><span class="badge-tag">{{ order.OrderType }}</span></div>
+                    <div class="col-sm-4"><span class="text-muted">Date</span><br><span class="fw-medium">{{ order.OrderDate.strftime('%Y-%m-%d %H:%M') if order.OrderDate else '' }}</span></div>
+                    <div class="col-sm-4"><span class="text-muted">Status</span><br>
+                        <span class="badge-st fs-6 mt-1 bg-{% if order.Status=='Completed' %}success-subtle text-success{% elif order.Status=='Cancelled' %}danger-subtle text-danger{% elif order.Status=='Preparing' %}warning-subtle text-warning{% elif order.Status=='Served' %}info-subtle text-info{% else %}secondary-subtle text-secondary{% endif %}">
+                            <span class="icon-dot bg-{% if order.Status=='Completed' %}success{% elif order.Status=='Cancelled' %}danger{% elif order.Status=='Preparing' %}warning{% elif order.Status=='Served' %}info{% else %}secondary{% endif %}"></span>{{ order.Status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body p-3 d-flex align-items-center">
+                <form method="post" action="/orders/{{ order.OrderID }}/status" class="w-100">
+                    <label class="form-label">Change Status</label>
+                    <div class="input-group input-group-sm">
+                        <select name="status" class="form-select" style="font-size:.75rem">
+                            {% for s in ['Pending','Preparing','Served','Completed','Cancelled'] %}
+                            <option value="{{ s }}" {% if order.Status==s %}selected{% endif %}>{{ s }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-outline-icon"><i class="bi bi-arrow-repeat" style="font-size:.7rem"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-2">
+    <div class="card-header">Items</div>
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>Item</th><th>Category</th><th>Price</th><th>Qty</th><th class="text-end">Subtotal</th></tr></thead>
+            <tbody>
+            {% for i in items %}
+            <tr>
+                <td class="fw-medium">{{ i.ItemName }}</td>
+                <td><span class="badge-tag">{{ i.CategoryName }}</span></td>
+                <td class="text-xs">LKR {{ i.UnitPrice }}</td>
+                <td>{{ i.Quantity }}</td>
+                <td class="text-end fw-medium text-xs">LKR {{ i.Subtotal }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot class="table-footer">
+                <tr><td colspan="4" class="text-end fw-bold">Total</td><td class="text-end fw-bold">LKR {{ order.TotalAmount }}</td></tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div class="card mb-2">
+    <div class="card-header">Payments</div>
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>ID</th><th>Date</th><th>Method</th><th>Ref</th><th class="text-end">Amount</th></tr></thead>
+            <tbody>
+            {% for p in payments %}
+            <tr>
+                <td class="text-xs text-muted">{{ p.PaymentID }}</td>
+                <td class="text-xs">{{ p.PaymentDate }}</td>
+                <td><span class="badge-tag">{{ p.PaymentMethod }}</span></td>
+                <td class="text-xs text-muted">{{ p.TransactionReference or '-' }}</td>
+                <td class="text-end fw-medium text-xs">LKR {{ p.Amount }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center text-xs text-muted py-2">No payments</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="/orders" class="btn btn-sm btn-soft"><i class="bi bi-arrow-left"></i> Back</a>
+<form method="post" action="/orders/{{ order.OrderID }}/delete" style="display:inline" onsubmit="return confirm('Delete order #{{ order.OrderID }}?')">
+    <button class="btn btn-sm btn-ghost"><i class="bi bi-trash"></i></button>
+</form>
+{% endblock %}

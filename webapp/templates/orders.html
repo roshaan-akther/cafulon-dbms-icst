@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block heading %}Orders{% endblock %}
+{% block topbar_extra %}
+<a href="/orders/add" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i></a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>#</th><th>Customer</th><th>Employee</th><th>Type</th><th>Amount</th><th>Status</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            {% for o in orders %}
+            <tr>
+                <td class="fw-medium">{{ o.OrderID }}</td>
+                <td>{{ o.CustomerName or 'Walk-in' }}</td>
+                <td class="text-xs text-muted">{{ o.EmployeeName }}</td>
+                <td><span class="badge-tag">{{ o.OrderType }}</span></td>
+                <td class="fw-medium text-xs">LKR {{ o.TotalAmount }}</td>
+                <td>{% set s = o.Status %}
+                    <span class="badge-st bg-{% if s=='Completed' %}success-subtle text-success{% elif s=='Cancelled' %}danger-subtle text-danger{% elif s=='Preparing' %}warning-subtle text-warning{% elif s=='Served' %}info-subtle text-info{% else %}secondary-subtle text-secondary{% endif %}">
+                        <span class="icon-dot bg-{% if s=='Completed' %}success{% elif s=='Cancelled' %}danger{% elif s=='Preparing' %}warning{% elif s=='Served' %}info{% else %}secondary{% endif %}"></span>{{ s }}
+                    </span>
+                </td>
+                <td class="text-end">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="/orders/{{ o.OrderID }}" class="btn btn-action btn-outline-icon" title="View"><i class="bi bi-eye" style="font-size:.65rem"></i></a>
+                        <form method="post" action="/orders/{{ o.OrderID }}/delete" onsubmit="return confirm('Delete order #{{ o.OrderID }}?')">
+                            <button class="btn btn-action btn-ghost" title="Delete"><i class="bi bi-trash" style="font-size:.65rem"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7"><div class="empty-state"><i class="bi bi-receipt"></i><p>No orders</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

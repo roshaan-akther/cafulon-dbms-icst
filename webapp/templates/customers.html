@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block heading %}Customers{% endblock %}
+{% block topbar_extra %}
+<a href="/customers/add" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i></a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>City</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            {% for c in customers %}
+            <tr>
+                <td class="text-xs text-muted">{{ c.CustomerID }}</td>
+                <td class="fw-medium">{{ c.FirstName }} {{ c.LastName }}</td>
+                <td class="text-xs">{{ c.Phone }}</td>
+                <td class="text-xs text-muted">{{ c.Email or '-' }}</td>
+                <td class="text-xs">{{ c.City or '-' }}</td>
+                <td class="text-end">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="/customers/{{ c.CustomerID }}/edit" class="btn btn-action btn-outline-icon" title="Edit"><i class="bi bi-pencil" style="font-size:.65rem"></i></a>
+                        <form method="post" action="/customers/{{ c.CustomerID }}/delete" onsubmit="return confirm('Delete?')">
+                            <button class="btn btn-action btn-ghost" title="Delete"><i class="bi bi-trash" style="font-size:.65rem"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-people"></i><p>No customers</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Employees{% endblock %}
+{% block heading %}Employees{% endblock %}
+{% block topbar_extra %}
+<a href="/employees/add" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i></a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>ID</th><th>Name</th><th>Position</th><th>Phone</th><th>Salary</th><th>Shift</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            {% for e in employees %}
+            <tr>
+                <td class="text-xs text-muted">{{ e.EmployeeID }}</td>
+                <td class="fw-medium">{{ e.FirstName }} {{ e.LastName }}</td>
+                <td><span class="badge-tag">{{ e.Position }}</span></td>
+                <td class="text-xs">{{ e.Phone }}</td>
+                <td class="text-xs fw-medium">LKR {{ "{:,.0f}".format(e.Salary) }}</td>
+                <td><span class="badge-st bg-{{ 'info-subtle text-info' if e.Shift=='Morning' else 'dark-subtle text-dark' }}">{{ e.Shift }}</span></td>
+                <td class="text-end">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="/employees/{{ e.EmployeeID }}/edit" class="btn btn-action btn-outline-icon" title="Edit"><i class="bi bi-pencil" style="font-size:.65rem"></i></a>
+                        <form method="post" action="/employees/{{ e.EmployeeID }}/delete" onsubmit="return confirm('Delete?')">
+                            <button class="btn btn-action btn-ghost" title="Delete"><i class="bi bi-trash" style="font-size:.65rem"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7"><div class="empty-state"><i class="bi bi-person-badge"></i><p>No employees</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

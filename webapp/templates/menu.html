@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+{% block heading %}Menu{% endblock %}
+{% block topbar_extra %}
+<a href="/menu/add" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i></a>
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="table-wrap">
+        <table class="table mb-0">
+            <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Prep</th><th>Avail</th><th class="text-end"></th></tr></thead>
+            <tbody>
+            {% for i in items %}
+            <tr>
+                <td class="text-xs text-muted">{{ i.ItemID }}</td>
+                <td class="fw-medium">{{ i.ItemName }}</td>
+                <td><span class="badge-tag">{{ i.CategoryName }}</span></td>
+                <td class="fw-medium text-xs">LKR {{ i.Price }}</td>
+                <td class="text-xs text-muted">{{ i.PreparationTime or '-' }}m</td>
+                <td>{% if i.IsAvailable %}<span class="badge-st bg-success-subtle text-success">Yes</span>{% else %}<span class="badge-st bg-danger-subtle text-danger">No</span>{% endif %}</td>
+                <td class="text-end">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="/menu/{{ i.ItemID }}/edit" class="btn btn-action btn-outline-icon" title="Edit"><i class="bi bi-pencil" style="font-size:.65rem"></i></a>
+                        <form method="post" action="/menu/{{ i.ItemID }}/delete" onsubmit="return confirm('Delete?')">
+                            <button class="btn btn-action btn-ghost" title="Delete"><i class="bi bi-trash" style="font-size:.65rem"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7"><div class="empty-state"><i class="bi bi-menu-app"></i><p>No menu items</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

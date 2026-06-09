@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:640px">
+    <div class="card-body p-3">
+        <form method="post">
+            <div class="row g-2">
+                <div class="col-sm-4">
+                    <label class="form-label">Customer</label>
+                    <select name="CustomerID" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        {% for c in customers %}
+                        <option value="{{ c.CustomerID }}" {% if res and res.CustomerID==c.CustomerID %}selected{% endif %}>{{ c.FirstName }} {{ c.LastName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label">Table</label>
+                    <select name="TableID" class="form-select" required>
+                        {% for t in tables %}
+                        <option value="{{ t.TableID }}" {% if res and res.TableID==t.TableID %}selected{% endif %}>#{{ t.TableNumber }} (Cap:{{ t.Capacity }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label">Employee</label>
+                    <select name="EmployeeID" class="form-select">
+                        <option value="">-- None --</option>
+                        {% for e in employees %}
+                        <option value="{{ e.EmployeeID }}" {% if res and res.EmployeeID==e.EmployeeID %}selected{% endif %}>{{ e.FirstName }} {{ e.LastName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label">Date</label>
+                    <input name="ReservationDate" type="date" class="form-control" required value="{{ res.ReservationDate if res else '' }}">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label">Time</label>
+                    <input name="ReservationTime" type="time" class="form-control" required value="{{ res.ReservationTime if res else '' }}">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label">Party Size</label>
+                    <input name="PartySize" type="number" min="1" class="form-control" required value="{{ res.PartySize if res else '' }}">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label">Status</label>
+                    <select name="Status" class="form-select">
+                        {% for s in ['Confirmed','Seated','Completed','Cancelled','No-Show'] %}
+                        <option value="{{ s }}" {% if res and res.Status==s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Special Requests</label>
+                    <textarea name="SpecialRequests" class="form-control" rows="1">{{ res.SpecialRequests if res else '' }}</textarea>
+                </div>
+                <div class="col-12 d-flex gap-2 pt-1">
+                    <button class="btn btn-primary px-3"><i class="bi bi-check-lg"></i> {{ 'Update' if res else 'Add' }}</button>
+                    <a href="/reservations" class="btn btn-soft">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
