@@ -21,7 +21,7 @@ Database management system for Cafulon Restaurant & Dining, Colombo.
 | Document | File |
 |---|---|
 | Requirements | [`docs/REQUIREMENT SPECIFICATION DOCUMENT.pdf`](docs/REQUIREMENT%20SPECIFICATION%20DOCUMENT.pdf) |
-| Project Report | [`docs/PROJECT REPORT DOCUMENT.pdf`](docs/PROJECT%20REPORT%20DOCUMENT.pdf) |
+| Project Report | [`docs/PROJECT REPORT DOCUMENT.pdf`](docs/PROJECT%20REPORT%20DOCUMENT%20(1).pdf) |
 | Normalization | [`docs/NORMALIZATION DOCUMENT.pdf`](docs/NORMALIZATION%20DOCUMENT.pdf) |
 | User Manual | [`docs/USER MANUAL DOCUMENT.pdf`](docs/USER%20MANUAL%20DOCUMENT.pdf) |
 | Optimization | [`docs/OPTIMIZATION DOCUMENT.pdf`](docs/OPTIMIZATION%20DOCUMENT.pdf) |
